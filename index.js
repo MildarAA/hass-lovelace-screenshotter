@@ -229,6 +229,10 @@ function sendBatteryLevelToHomeAssistant(
 async function renderUrlToImageAsync(browser, pageConfig, url, path) {
   let page;
   try {
+    let crop = {
+      x: 480,
+      y: 130
+    };
     page = await browser.newPage();
     await page.emulateMediaFeatures([
       {
@@ -238,8 +242,8 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
     ]);
 
     let size = {
-      width: Number(pageConfig.renderingScreenSize.width),
-      height: Number(pageConfig.renderingScreenSize.height)
+      width: Number(pageConfig.renderingScreenSize.width) + crop.x,
+      height: Number(pageConfig.renderingScreenSize.height + crop.y )
     };
 
     if (pageConfig.rotation % 180 > 0) {
@@ -279,9 +283,10 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
       path,
       type: "png",
       clip: {
-        x: 0,
-        y: 0,
-        ...size
+        x: crop.x,
+        y: crop.y,
+        width: size.width - crop.x,
+        height: size.height - crop.y
       }
     });
   } catch (e) {
