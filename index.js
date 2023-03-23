@@ -229,10 +229,18 @@ function sendBatteryLevelToHomeAssistant(
 async function renderUrlToImageAsync(browser, pageConfig, url, path) {
   let page;
   try {
-    let crop = {
-      x: 480,
-      y: 130
-    };
+    let crop
+    if (url.includes("/calendar")){
+      crop = {
+        x: 480,
+        y: 130
+      };
+    } else {
+      crop = {
+        x: 0,
+        y: 0
+      };
+    }
     page = await browser.newPage();
     await page.emulateMediaFeatures([
       {
